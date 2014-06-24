@@ -10,7 +10,8 @@ select format('%s.%s.%s', table_schema, table_name, column_name) as "Column", da
         , case upper(is_nullable) when 'NO' then ' not-null="true"' else '' end)
         as "NHibernate Map Field"
 
-    , format(E'/// <summary>\n/// %s\n/// </summary>\npublic virtual %s%s %s { get; set; }\n', coalesce(trim(pgd.description), '')
+    , format(E'/// <summary>\n/// %s\n/// </summary>\npublic virtual %s%s %s { get; set; }\n'
+        , coalesce(trim(pgd.description), '')
         , case
             when upper(data_type) = 'BOOLEAN' then 'bool'
             when upper(data_type) in ('DATE', 'TIMESTAMP WITH TIME ZONE', 'TIMESTAMP WITHOUT TIME ZONE') then 'DateTime'
@@ -28,7 +29,7 @@ from information_schema.columns as c
 inner join pg_catalog.pg_description as pgd ON pgd.objsubid = c.ordinal_position
 inner join pg_catalog.pg_statio_all_tables as st ON pgd.objoid = st.relid and c.table_schema = st.schemaname and c.table_name = st.relname
 
-where table_name ilike 'table' -- imagine ;-)
+where table_name ilike 'stocks' -- imagine ;-)
     --and table_schema ilike 'schema'
 
 order by table_schema, table_name
